@@ -12,6 +12,7 @@ import { ModuleConfig, RemoteModulePanel } from '../moduleconfig.model';
 import { MODULES_CONFIG } from '../moduleinjection.token';
 import { TestService } from "@kict/mfe-shared";
 import { Observable } from "rxjs";
+import { loadRemoteModule } from '@angular-architects/module-federation';
 
 
 @Component({
@@ -31,7 +32,11 @@ export class AppComponent implements OnInit {
         private shared: TestService
     ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
+
+        // for (let i = 0; i < this.config.panels.length; i++) {
+        //     this.config.panels[i].module = await loadRemoteModule(this.config.panels[i]);
+        // }
 
         this.config.panels.forEach( panel => {
             this.loadRemotePanel(panel);
@@ -47,6 +52,8 @@ export class AppComponent implements OnInit {
 
     loadRemotePanel(panel: RemoteModulePanel) {
         const module = panel.module[panel.exposedModuleName];
+        
+       
         this.compiler
             .compileModuleAsync(module)
             .then((moduleFactory: NgModuleFactory<typeof module>) => {
